@@ -8,10 +8,7 @@ export const messageApi = {
             title: "ERROR",
             text: msg
         });
-        if (inXhr.status == 401) {
-            var authUrl = devConfig.getApiUrl() + "/auth/openid";
-            window.open(authUrl, '_self');
-        }
+
     },
     errorMessage: (msg) => {
         webix.alert({

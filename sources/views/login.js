@@ -1,5 +1,6 @@
 import { JetView } from "webix-jet";
-
+import { usuarioService } from "../services/usuario_service";
+import { messageApi } from "../utilities/messages";
 export default class Login extends JetView {
     config() {
         var _view = {
@@ -25,11 +26,11 @@ export default class Login extends JetView {
                                             label: "<img src='assets/img/logo.png'/>"
                                         },
                                         {
-                                            view: "text", name: "login",
+                                            view: "text", name: "login", required: true,
                                             label: "Usuario", labelPosition: "top"
                                         },
                                         {
-                                            view: "text", name: "password",
+                                            view: "text", type: "password", name: "password", required: true,
                                             label: "Contraseña", labelPosition: "top"
                                         },
                                         {
@@ -56,5 +57,27 @@ export default class Login extends JetView {
     }
     init() {
 
+    }
+    cancel() {
+
+    }
+    accept() {
+        if (!$$("frmLogin").validate()) {
+            messageApi.errorMessage("Debe rellenar los campos correctamente");
+            return;
+        }
+        var data = $$("frmLogin").getValues();
+        console.log(data);
+        usuarioService.getLogin(data.login, data.password)
+            .then(result => {
+                let usuario = result;
+                delete usuario.password;
+                usuario.apiKey = "X2X";
+                usuarioService.setUsuarioCookie(usuario);
+                this.$scope.show('top/inicio');
+            })
+            .catch(err => {
+                messageApi.errorMessageAjax(err);
+            });
     }
 }

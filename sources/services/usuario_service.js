@@ -5,25 +5,23 @@ export const usuarioService = {
     // Obtains usuario infor information from its cookie if there isn't
     // an usuario cookie returns null
     getUsuarioCookie: () => {
-        var usuario = cookieApi.getCookie('gdes_pipeline_usuario');
+        var usuario = cookieApi.getCookie('comercializa_usuario');
         if (!usuario) return null;
         return JSON.parse(usuario);
     },
     // setUsuarioCookie
     // Saves usuario's information in a cookie
     setUsuarioCookie: (usuario) => {
-        cookieApi.setCookie('gdes_pipeline_usuario', JSON.stringify(usuario), 1);
+        cookieApi.setCookie('comercializa_usuario', JSON.stringify(usuario), 1);
     },
     deleteUsuarioCookie: (usuario) => {
-        cookieApi.deleteCookie('gdes_pipeline_usuario');
+        cookieApi.deleteCookie('comercializa_usuario');
     },
     checkLoggedUser: () => {
         // Auth url
-        var authUrl = devConfig.getApiUrl() + "/auth/openid"
         // Verify if exists a user cookie
         var usu = usuarioService.getUsuarioCookie();
         if (!usu) {
-            window.open(authUrl, '_self');
             return false;
         }
         return usu;

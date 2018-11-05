@@ -11,7 +11,7 @@ export default class MainToolbar extends JetView {
 		const translate = this.app.getService("locale")._;
 		var mainToolBar = {
 			view: "toolbar",
-			height: 50,
+			height: 60,
 			elements: [
 				{
 					view: "button", type: "icon", icon: "mdi mdi-menu", width: 37, align: "left",
@@ -19,7 +19,7 @@ export default class MainToolbar extends JetView {
 						$$("main:menu").toggle();
 					}
 				},
-				{ view: "label", label: "<a href='#!/top/inicio'><img src='assets/img/gdes_logo.png' height='35' /></a>", width: 150 },
+				{ view: "label", label: "<a href='#!/top/inicio'><img src='assets/img/logo.png' height='50' /></a>", width: 150 },
 				{ view: "button", type: "icon", icon: "mdi mdi-account-key mdi-36px", width: 50 },
 				{
 					height: 46, id: "person_template", css: "header_person", borderless: true, data: usu,
@@ -43,7 +43,7 @@ export default class MainToolbar extends JetView {
 					tooltip: translate("Salir y logout"),
 					click: () => {
 						usuarioService.deleteUsuarioCookie();
-						window.open('https://login.microsoftonline.com/common/oauth2/logout', '_self');
+						this.show('/login');
 					}
 				}
 			]
