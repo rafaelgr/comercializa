@@ -28,126 +28,16 @@ export const usuarioService = {
         }
         return usu;
     },
-    // getUsuario
-    getUsuarios: (usu) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/usuarios";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .get(url)
-                .then(function (result) {
-                    success(result.json());
-                })
-                .catch(function (inXhr) {
-                    fail(inXhr);
-                });
-        });
-    },
     // getLoginEmail
-    getLoginEmail: (email) => {
-        return new webix.promise((success, fail)=>{
-            var url = devConfig.getApiUrl() + "/login/email";
+    getLogin: (login, password) => {
+        return new webix.promise((success, fail) => {
+            var url = devConfig.getApiUrl() + "/api/comerciales/login";
             webix.ajax()
                 .timeout(10000)
                 .headers({
                     "Content-Type": "application/json"
                 })
-                .post(url, { usuario: { email: email } })
-                .then(function (result) {
-                    success(result.json());
-                })
-                .catch(function (inXhr) {
-                    fail(inXhr);
-                });
-        });
-    },
-    getSyncUsuarios: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/usuarios";
-        var res = webix.ajax()
-            .headers({
-                "Content-Type": "application/json",
-                "x-apiKey": usu.apiKey
-            })
-            .sync()
-            .get(url);
-        var result = { data: null, err: null };
-        if (res.status != 200) {
-            result.err = res;
-        } else {
-            result.data = JSON.parse(res.response);
-        }
-        return result;
-    },
-    getUsuario: (usu, usuarioId) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/usuarios/" + usuarioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .get(url)
-                .then(function (result) {
-                    success(result.json());
-                })
-                .catch(function (inXhr) {
-                    fail(inXhr);
-                })
-        });
-        ;
-    },
-    postUsuario: (usu, usuario) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/usuarios";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .post(url, usuario)
-                .then(function (result) {
-                    success(result.json());
-                })
-                .catch(function (inXhr) {
-                    fail(inXhr);
-                })
-        });
-    },
-    putUsuario: (usu, usuario) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/usuarios";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .put(url, usuario)
-                .then(function (result) {
-                    success(result.json());
-                })
-                .catch(function (inXhr) {
-                    fail(inXhr);
-                })
-        });
-
-    },
-    deleteUsuario: (usu, usuarioId) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/usuarios/" + usuarioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .del(url)
+                .post(url, { login: login, password: password })
                 .then(function (result) {
                     success(result.json());
                 })

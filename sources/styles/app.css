@@ -22,3 +22,12 @@
 .header_person .webix_icon{
 	line-height: inherit;
 }
+.loginBack {
+	background-image:url(/assets/img/fondo.jpg); 
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.round-border {
+    border-radius: 15px;
+}
