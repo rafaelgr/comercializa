@@ -1,39 +1,39 @@
 import { JetView } from "webix-jet";
 import { usuarioService } from "../services/usuario_service";
-import { paisesService } from "../services/paises_service";
-import { empresasService } from "../services/empresas_service";
+import { serviciosService } from "../services/servicios_service";
+import { tiposProfesional, tiposProfesionalService } from "../services/tiposProfesional_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
 
-var empresaId = 0;
+var servicioId = 0;
 
-export default class EmpreasForm extends JetView {
+export default class ServiciosForm extends JetView {
     config() {
         const translate = this.app.getService("locale")._;
         const _view = {
             view: "layout",
-            id: "empresasForm",
+            id: "serviciosForm",
             rows: [
                 {
                     view: "toolbar", padding: 3, elements: [
-                        { view: "icon", icon: "mdi mdi-cube", width: 37, align: "left" },
-                        { view: "label", label: translate("Empresas") }
+                        { view: "icon", icon: "mdi mdi-home-assistant", width: 37, align: "left" },
+                        { view: "label", label: "Servicios" }
                     ]
                 },
                 {
                     view: "form",
 
-                    id: "frmEmpresas",
+                    id: "frmServicios",
                     elements: [
                         {
                             cols: [
                                 {
-                                    view: "text", name: "empresaId", width: 100, disabled: true,
-                                    label: translate("ID"), labelPosition: "top"
+                                    view: "text", name: "fechaCreacion", disabled: true,
+                                    label: "Fecha solicitud", labelPosition: "top"
                                 },
                                 {
                                     view: "text", name: "nombre", required: true, id: "firstField",
-                                    label: translate("Nombre empresa"), labelPosition: "top"
+                                    label: translate("Nombre servicio"), labelPosition: "top"
                                 }
                             ]
                         },
@@ -64,62 +64,62 @@ export default class EmpreasForm extends JetView {
     }
     init(view, url) {
         usuarioService.checkLoggedUser();
-        if (url[0].params.empresaId) {
-            empresaId = url[0].params.empresaId;
+        if (url[0].params.servicioId) {
+            servicioId = url[0].params.servicioId;
         }
-        this.load(empresaId);
+        this.load(servicioId);
         webix.delay(function () { $$("firstField").focus(); });
     }
-    load(empresaId) {
-        if (empresaId == 0) {
+    load(servicioId) {
+        if (servicioId == 0) {
             this.loadPaises();
             return;
         }
-        empresasService.getEmpresa(usuarioService.getUsuarioCookie(), empresaId)
-            .then((empresa) => {
-                $$("frmEmpresas").setValues(empresa);
-                this.loadPaises(empresa.paisId);
+        serviciosService.getServicio(usuarioService.getUsuarioCookie(), servicioId)
+            .then((servicio) => {
+                $$("frmServicios").setValues(servicio);
+                this.loadPaises(servicio.paisId);
             })
             .catch((err) => {
                 messageApi.errorMessageAjax(err);
             });
     }
     cancel() {
-        this.$scope.show('/top/empresas');
+        this.$scope.show('/top/servicios');
     }
     accept() {
         const translate = this.$scope.app.getService("locale")._;
-        if (!$$("frmEmpresas").validate()) {
+        if (!$$("frmServicios").validate()) {
             messageApi.errorMessage(translate("Debe rellenar los campos correctamente"));
             return;
         }
-        var data = $$("frmEmpresas").getValues();
-        if (empresaId == 0) {
-            data.empresaId = 0;
-            empresasService.postEmpresa(usuarioService.getUsuarioCookie(), data)
+        var data = $$("frmServicios").getValues();
+        if (servicioId == 0) {
+            data.servicioId = 0;
+            serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
                 .then((result) => {
-                    this.$scope.show('/top/empresas?empresaId=' + result.empresaId);
+                    this.$scope.show('/top/servicios?servicioId=' + result.servicioId);
                 })
                 .catch((err) => {
                     messageApi.errorMessageAjax(err);
                 });
         } else {
-            empresasService.putEmpresa(usuarioService.getUsuarioCookie(), data)
+            serviciosService.putServicio(usuarioService.getUsuarioCookie(), data)
                 .then(() => {
-                    this.$scope.show('/top/empresas?empresaId=' + data.empresaId);
+                    this.$scope.show('/top/servicios?servicioId=' + data.servicioId);
                 })
                 .catch((err) => {
                     messageApi.errorMessageAjax(err);
                 });
         }
     }
-    loadPaises(paisId) {
-        paisesService.getPaises(usuarioService.getUsuarioCookie())
+    loadTiposProfesional(tipoProfesionalId) {
+        tiposProfesionalService.getTiposProfesional(usuarioService.getUsuarioCookie())
             .then(rows => {
-                var empresas = generalApi.prepareDataForCombo('paisId', 'nombre', rows);
+                var servicios = generalApi.prepareDataForCombo('paisId', 'nombre', rows);
                 var list = $$("cmbPais").getPopup().getList();
                 list.clearAll();
-                list.parse(empresas);
+                list.parse(servicios);
                 if (id) {
                     $$("cmbPais").setValue(paisId);
                     $$("cmbPais").refresh();

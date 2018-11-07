@@ -17,13 +17,13 @@ export default class Servicios extends JetView {
         var toolbarServicios = {
             view: "toolbar", padding: 3, elements: [
                 { view: "icon", icon: "mdi mdi-home-assistant", width: 37, align: "left" },
-                { view: "label", label: translate("Servicios") }
+                { view: "label", label: "Servicios" }
             ]
         }
         var pagerServicios = {
             cols: [
                 {
-                    view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value:"Solicitar un nuevo servicio", width:300,
+                    view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value: "Solicitar un nuevo servicio", width: 300,
                     click: () => {
                         this.show('/top/serviciosForm?servicioId=0');
                     }
@@ -43,8 +43,11 @@ export default class Servicios extends JetView {
             pager: "mypager",
             select: "row",
             columns: [
-                { id: "servicioId", adjust: true, header: ["ID", { content: "numberFilter" }], sort: "number" },
-                { id: "descripcion", fillspace: true, header: [translate("Descripción del servicio solicitado"), { content: "textFilter" }], sort: "string", editor: "text" }
+                { id: "fechaSolicitud", adjust: true, header: ["Fecha solicitud", { content: "textFilter" }], sort: "date", format: webix.Date.dateToStr("%d/%m/%Y") },
+                { id: "descripcion", fillspace: true, header: ["Descripción del servicio solicitado", { content: "textFilter" }], sort: "string", editor: "text" },
+                { id: "descripcion", fillspace: true, header: ["Descripción del servicio solicitado", { content: "textFilter" }], sort: "string", editor: "text" },
+                { id: "direccion", fillspace: true, header: ["Dirección", { content: "textFilter" }], sort: "string", editor: "text" },
+                { id: "actions", header: [{ text: translate("Acciones"), css: { "text-align": "center" } }], template: editButton , css: { "text-align": "center" } }
             ],
             onClick: {
                 "onEdit": function (event, id, node) {
@@ -68,7 +71,7 @@ export default class Servicios extends JetView {
                     if (state.value != state.old) {
                         isNewRow = false;
                         if (!this.validate(currentIdDatatableView)) {
-                            messageApi.errorMessage(translate("Valores incorrectos"));
+                            messageApi.errorMessage("Valores incorrectos");
                         } else {
                             currentRowDatatableView = this.data.pull[currentIdDatatableView];
                             // id is not part of the row object
@@ -118,7 +121,7 @@ export default class Servicios extends JetView {
         this.load(id);
     }
     load(id) {
-        serviciosService.getServicios(usuarioService.getUsuarioCookie())
+        serviciosService.getServiciosComercial(usuarioService.getUsuarioCookie())
             .then((data) => {
                 $$("serviciosGrid").clearAll();
                 $$("serviciosGrid").parse(generalApi.prepareDataForDataTable("servicioId", data));

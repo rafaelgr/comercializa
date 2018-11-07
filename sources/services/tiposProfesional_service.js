@@ -1,8 +1,8 @@
 import { devConfig } from "../config/config";
-export const serviciosService = {
-    getServicios: (usu) => {
+export const tiposProfesionalService = {
+    getTiposProfesional: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
+            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -18,26 +18,8 @@ export const serviciosService = {
                 });
         });
     },
-    getServiciosComercial: (usu) => {
-        return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/agente/" + usu.comercialId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
-                })
-                .get(url)
-                .then((result) => {
-                    success(result.json());
-                })
-                .catch((inXhr) => {
-                    fail(inXhr);
-                });
-        });
-    },    
-    getSyncServicios: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/servicios";
+    getSyncTiposProfesional: (usu) => {
+        var url = devConfig.getApiUrl() + "/api/tipos_profesional";
         var res = webix.ajax()
             .headers({
                 "Content-Type": "application/json",
@@ -53,9 +35,9 @@ export const serviciosService = {
         }
         return result;
     },
-    getServicio: (usu, servicioId) => {
+    getTipoProfesional: (usu, tipoProfesionalId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/tipos_profesional/" + tipoProfesionalId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -72,9 +54,9 @@ export const serviciosService = {
         })
 
     },
-    postServicio: (usu, grupoUsuario) => {
+    postTipoProfesional: (usu, grupoUsuario) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
+            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -91,9 +73,9 @@ export const serviciosService = {
 
         });
     },
-    putServicio: (usu, grupoUsuario) => {
+    putTipoProfesional: (usu, grupoUsuario) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
+            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -109,9 +91,9 @@ export const serviciosService = {
                 });
         });
     },
-    deleteServicio: (usu, servicioId) => {
+    deleteTipoProfesional: (usu, tipoProfesionalId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/tipos_profesional/" + tipoProfesionalId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
