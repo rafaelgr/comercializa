@@ -1,8 +1,8 @@
 import { JetView } from "webix-jet";
 import { usuarioService } from "../services/usuario_service";
 import { tiposProfesionalService } from "../services/tiposProfesional_service";
-import { serviciosService} from "../services/servicios_service";
-import { clientesService} from "../services/clientes_service";
+import { serviciosService } from "../services/servicios_service";
+import { clientesService } from "../services/clientes_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
 
@@ -29,7 +29,7 @@ export default class ServiciosForm extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "datepicker", id: "fechaServicio", name: "fechaCreacion", disabled: true, 
+                                    view: "datepicker", id: "fechaServicio", name: "fechaCreacion", disabled: true, width: 200,
                                     label: "Fecha solicitud", labelPosition: "top"
                                 },
                                 {
@@ -44,10 +44,51 @@ export default class ServiciosForm extends JetView {
                             ]
                         },
                         {
+                            cols: [
+                                {
+                                    view: "text", id: "calle", name: "calle",
+                                    label: "Calle", labelPosition: "top"
+                                },
+                                {
+                                    view: "text", id: "numero", name: "numero", width: 100,
+                                    label: "Número", labelPosition: "top"
+                                },
+                                {
+                                    view: "text", id: "poblacion", name: "poblacion",
+                                    label: "Población", labelPosition: "top"
+                                },
+                                {
+                                    view: "text", id: "codPostal", name: "codPostal", width: 100,
+                                    label: "Cod. Postal", labelPosition: "top"
+                                },
+                                {
+                                    view: "text", id: "provincia", name: "provincia",
+                                    label: "Provincia", labelPosition: "top"
+                                }
+                            ]
+                        },
+                        {
+                            cols: [
+                                {
+                                    view: "textarea", id: "descripcion", name: "descripcion",
+                                    label: "Descripción de la avería", labelPosition: "top"
+                                }
+                            ]
+
+                        },
+                        {
+                            view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo`
+                        },
+                        {
+                            borderless: true, template: `Autoriza la reparación de la avería, ajustando los precios a tarifas, 
+                            el importe no superará 400€ +IVA, de lo contrario se realizará la mínima intervención para evitar daños mayores, 
+                            no se realizará ningún trabajo que supere este importe sin la aceptación previa del presupuesto.`
+                        },
+                        {
                             margin: 5, cols: [
                                 { gravity: 5 },
-                                { view: "button", label: translate("Cancelar"), click: this.cancel, hotkey: "esc" },
-                                { view: "button", label: translate("Aceptar"), click: this.accept, type: "form", hotkey: "enter" }
+                                { view: "button", label: "Cancelar", click: this.cancel, hotkey: "esc" },
+                                { view: "button", label: "Aceptar", click: this.accept, type: "form", hotkey: "enter" }
                             ]
                         }
                     ]
