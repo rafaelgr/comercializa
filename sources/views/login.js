@@ -67,7 +67,6 @@ export default class Login extends JetView {
             return;
         }
         var data = $$("frmLogin").getValues();
-        console.log(data);
         usuarioService.getLogin(data.login, data.password)
             .then(result => {
                 let usuario = result;

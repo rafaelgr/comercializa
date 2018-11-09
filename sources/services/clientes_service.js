@@ -1,8 +1,8 @@
 import { devConfig } from "../config/config";
-export const serviciosService = {
-    getServicios: (usu) => {
+export const clientesService = {
+    getClientes: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
+            var url = devConfig.getApiUrl() + "/api/clientes";
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -18,9 +18,9 @@ export const serviciosService = {
                 });
         });
     },
-    getServiciosComercial: (usu) => {
+    getClientesAgente: (usu, agenteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/agente/" + usu.comercialId;
+            var url = devConfig.getApiUrl() + "/api/clientes/agente/" + agenteId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -35,9 +35,9 @@ export const serviciosService = {
                     fail(inXhr);
                 });
         });
-    },    
-    getSyncServicios: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/servicios";
+    },
+    getSyncClientes: (usu) => {
+        var url = devConfig.getApiUrl() + "/api/clientes";
         var res = webix.ajax()
             .headers({
                 "Content-Type": "application/json",
@@ -53,9 +53,9 @@ export const serviciosService = {
         }
         return result;
     },
-    getServicio: (usu, servicioId) => {
+    getCliente: (usu, clienteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/clientes/" + clienteId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -72,16 +72,16 @@ export const serviciosService = {
         })
 
     },
-    postServicio: (usu, servicio) => {
+    postCliente: (usu, cliente) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
+            var url = devConfig.getApiUrl() + "/api/clientes";
             webix.ajax()
                 .timeout(10000)
                 .headers({
                     "Content-Type": "application/json",
                     "x-apiKey": usu.apiKey
                 })
-                .post(url, servicio)
+                .post(url, cliente)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -91,17 +91,16 @@ export const serviciosService = {
 
         });
     },
-    putServicio: (usu, servicio) => {
-        servicio = serviciosService.cleanServicio(servicio);
+    putCliente: (usu, cliente) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicio.servicioId;
+            var url = devConfig.getApiUrl() + "/api/clientes";
             webix.ajax()
                 .timeout(10000)
                 .headers({
                     "Content-Type": "application/json",
                     "x-apiKey": usu.apiKey
                 })
-                .put(url, {servicio: servicio})
+                .put(url, cliente)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -110,9 +109,9 @@ export const serviciosService = {
                 });
         });
     },
-    deleteServicio: (usu, servicioId) => {
+    deleteCliente: (usu, clienteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/clientes/" + clienteId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -127,14 +126,5 @@ export const serviciosService = {
                     fail(inXhr);
                 });
         });
-    },
-    cleanServicio: (servicio) => {
-        delete servicio.direccion;
-        delete servicio.usuario;
-        delete servicio.cliente;
-        delete servicio.agente;
-        delete servicio.tipoProfesional;
-        delete servicio.fechaSolicitud;
-        return servicio;
     }
 }

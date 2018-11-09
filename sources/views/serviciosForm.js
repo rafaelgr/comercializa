@@ -1,7 +1,8 @@
 import { JetView } from "webix-jet";
 import { usuarioService } from "../services/usuario_service";
-import { serviciosService } from "../services/servicios_service";
-import { tiposProfesional, tiposProfesionalService } from "../services/tiposProfesional_service";
+import { tiposProfesionalService } from "../services/tiposProfesional_service";
+import { serviciosService} from "../services/servicios_service";
+import { clientesService} from "../services/clientes_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
 
@@ -28,25 +29,18 @@ export default class ServiciosForm extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "text", name: "fechaCreacion", disabled: true,
+                                    view: "datepicker", id: "fechaServicio", name: "fechaCreacion", disabled: true, 
                                     label: "Fecha solicitud", labelPosition: "top"
                                 },
                                 {
-                                    view: "text", name: "nombre", required: true, id: "firstField",
-                                    label: translate("Nombre servicio"), labelPosition: "top"
-                                }
-                            ]
-                        },
-                        {
-                            cols: [
-                                {
-                                    view: "text", name: "cod", width: 100, required: true,
-                                    label: translate("Código"), labelPosition: "top"
+                                    view: "combo", id: "cmbTipoProfesional", name: "tipoProfesionalId", required: true, options: {},
+                                    label: "Tipo profesional", labelPosition: "top"
                                 },
                                 {
-                                    view: "combo", id: "cmbPais", name: "paisId", required: true, options: {},
-                                    label: translate("Pais relacionado"), labelPosition: "top"
+                                    view: "combo", id: "cmbClientes", name: "clienteId", required: true, options: {},
+                                    label: "Cliente", labelPosition: "top"
                                 }
+
                             ]
                         },
                         {
@@ -68,17 +62,21 @@ export default class ServiciosForm extends JetView {
             servicioId = url[0].params.servicioId;
         }
         this.load(servicioId);
-        webix.delay(function () { $$("firstField").focus(); });
+        webix.delay(function () { $$("cmbTipoProfesional").focus(); });
     }
     load(servicioId) {
         if (servicioId == 0) {
-            this.loadPaises();
+            this.loadTiposProfesional();
+            this.loadClientesAgente();
+            $$("fechaServicio").setValue(new Date());
             return;
         }
         serviciosService.getServicio(usuarioService.getUsuarioCookie(), servicioId)
             .then((servicio) => {
+                servicio.fechaCreacion = new Date(servicio.fechaCreacion);
                 $$("frmServicios").setValues(servicio);
-                this.loadPaises(servicio.paisId);
+                this.loadTiposProfesional(servicio.tipoProfesionalId);
+                this.loadClientesAgente(servicio.clienteId);
             })
             .catch((err) => {
                 messageApi.errorMessageAjax(err);
@@ -116,13 +114,27 @@ export default class ServiciosForm extends JetView {
     loadTiposProfesional(tipoProfesionalId) {
         tiposProfesionalService.getTiposProfesional(usuarioService.getUsuarioCookie())
             .then(rows => {
-                var servicios = generalApi.prepareDataForCombo('paisId', 'nombre', rows);
-                var list = $$("cmbPais").getPopup().getList();
+                var servicios = generalApi.prepareDataForCombo('tipoProfesionalId', 'nombre', rows);
+                var list = $$("cmbTipoProfesional").getPopup().getList();
                 list.clearAll();
                 list.parse(servicios);
-                if (id) {
-                    $$("cmbPais").setValue(paisId);
-                    $$("cmbPais").refresh();
+                if (tipoProfesionalId) {
+                    $$("cmbTipoProfesional").setValue(tipoProfesionalId);
+                    $$("cmbTipoProfesional").refresh();
+                }
+                return;
+            });
+    }
+    loadClientesAgente(clienteId) {
+        clientesService.getClientesAgente(usuarioService.getUsuarioCookie(), usuarioService.getUsuarioCookie().comercialId)
+            .then(rows => {
+                var servicios = generalApi.prepareDataForCombo('clienteId', 'nombre', rows);
+                var list = $$("cmbClientes").getPopup().getList();
+                list.clearAll();
+                list.parse(servicios);
+                if (clienteId) {
+                    $$("cmbClientes").setValue(clienteId);
+                    $$("cmbClientes").refresh();
                 }
                 return;
             });

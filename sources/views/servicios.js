@@ -44,7 +44,7 @@ export default class Servicios extends JetView {
             select: "row",
             columns: [
                 { id: "fechaSolicitud", adjust: true, header: ["Fecha solicitud", { content: "textFilter" }], sort: "date", format: webix.Date.dateToStr("%d/%m/%Y") },
-                { id: "descripcion", fillspace: true, header: ["Descripción del servicio solicitado", { content: "textFilter" }], sort: "string", editor: "text" },
+                { id: "tipoProfesional", fillspace: true, header: ["Tipo profesional", { content: "textFilter" }], sort: "string", editor: "text" },
                 { id: "descripcion", fillspace: true, header: ["Descripción del servicio solicitado", { content: "textFilter" }], sort: "string", editor: "text" },
                 { id: "direccion", fillspace: true, header: ["Dirección", { content: "textFilter" }], sort: "string", editor: "text" },
                 { id: "actions", header: [{ text: translate("Acciones"), css: { "text-align": "center" } }], template: editButton , css: { "text-align": "center" } }
