@@ -46,15 +46,15 @@ export default class ServiciosForm extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "text", id: "calle", name: "calle",
+                                    view: "text", id: "calle", name: "calle", required: true,
                                     label: "Calle", labelPosition: "top"
                                 },
                                 {
-                                    view: "text", id: "numero", name: "numero", width: 100,
+                                    view: "text", id: "numero", name: "numero", width: 100, 
                                     label: "Número", labelPosition: "top"
                                 },
                                 {
-                                    view: "text", id: "poblacion", name: "poblacion",
+                                    view: "text", id: "poblacion", name: "poblacion", required: true,
                                     label: "Población", labelPosition: "top"
                                 },
                                 {
@@ -70,14 +70,14 @@ export default class ServiciosForm extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "textarea", id: "descripcion", name: "descripcion",
+                                    view: "textarea", id: "descripcion", name: "descripcion", required: true,
                                     label: "Descripción de la avería", labelPosition: "top"
                                 }
                             ]
 
                         },
                         {
-                            view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo`
+                            view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo`, required: true,
                         },
                         {
                             borderless: true, template: `Autoriza la reparación de la avería, ajustando los precios a tarifas, 
@@ -104,6 +104,9 @@ export default class ServiciosForm extends JetView {
         }
         this.load(servicioId);
         webix.delay(function () { $$("cmbTipoProfesional").focus(); });
+        this.$$("cmbClientes").attachEvent("onChange", (newv, oldv) => {
+            this.loadClienteData(newv);
+        });
     }
     load(servicioId) {
         if (servicioId == 0) {
@@ -129,12 +132,13 @@ export default class ServiciosForm extends JetView {
     accept() {
         const translate = this.$scope.app.getService("locale")._;
         if (!$$("frmServicios").validate()) {
-            messageApi.errorMessage(translate("Debe rellenar los campos correctamente"));
+            messageApi.errorMessage("Debe rellenar los campos correctamente");
             return;
         }
         var data = $$("frmServicios").getValues();
         if (servicioId == 0) {
             data.servicioId = 0;
+            data.agenteId = usuarioService.getUsuarioCookie().comercialId;
             serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
                 .then((result) => {
                     this.$scope.show('/top/servicios?servicioId=' + result.servicioId);
@@ -178,6 +182,16 @@ export default class ServiciosForm extends JetView {
                     $$("cmbClientes").refresh();
                 }
                 return;
+            });
+    }
+    loadClienteData(clienteId) {
+        clientesService.getCliente(usuarioService.getUsuarioCookie(), clienteId)
+            .then(rows => {
+                $$("calle").setValue(rows.direccion);
+                $$("poblacion").setValue(rows.poblacion2);
+                $$("codPostal").setValue(rows.codPostal);
+                $$("provincia").setValue(rows.provincia);
+                 return;
             });
     }
 }

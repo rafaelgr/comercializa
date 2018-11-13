@@ -81,7 +81,7 @@ export const serviciosService = {
                     "Content-Type": "application/json",
                     "x-apiKey": usu.apiKey
                 })
-                .post(url, servicio)
+                .post(url, {servicio: servicio})
                 .then(function (result) {
                     success(result.json());
                 })
