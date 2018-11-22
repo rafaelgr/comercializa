@@ -6,6 +6,7 @@ import { clientesService } from "../services/clientes_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
 
+
 var servicioId = 0;
 
 export default class ServiciosForm extends JetView {
@@ -50,7 +51,7 @@ export default class ServiciosForm extends JetView {
                                     label: "Calle", labelPosition: "top"
                                 },
                                 {
-                                    view: "text", id: "numero", name: "numero", width: 100, 
+                                    view: "text", id: "numero", name: "numero", width: 100,
                                     label: "Número", labelPosition: "top"
                                 },
                                 {
@@ -68,22 +69,23 @@ export default class ServiciosForm extends JetView {
                             ]
                         },
                         {
-                            cols: [
-                                {
-                                    view: "textarea", id: "descripcion", name: "descripcion", required: true,
-                                    label: "Descripción de la avería", labelPosition: "top"
-                                }
-                            ]
+                            $subview: true
+                        },                        
+                        {
+                            view: "textarea", id: "descripcion", name: "descripcion", required: true,
+                            label: "Descripción de la avería", labelPosition: "top"
 
                         },
                         {
-                            view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo`, required: true,
+                            view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo reparación menor de 400€ (1)`, required: true, labelWidth: 280
                         },
                         {
-                            borderless: true, template: `Autoriza la reparación de la avería, ajustando los precios a tarifas, 
+                            borderless: true,
+                            template: `(1) Autoriza la reparación de la avería, ajustando los precios a tarifas, 
                             el importe no superará 400€ +IVA, de lo contrario se realizará la mínima intervención para evitar daños mayores, 
                             no se realizará ningún trabajo que supere este importe sin la aceptación previa del presupuesto.`
                         },
+
                         {
                             margin: 5, cols: [
                                 { gravity: 5 },
@@ -113,6 +115,7 @@ export default class ServiciosForm extends JetView {
             this.loadTiposProfesional();
             this.loadClientesAgente();
             $$("fechaServicio").setValue(new Date());
+            this.show("./locales_afectados?servicioId=" + servicioId);
             return;
         }
         serviciosService.getServicio(usuarioService.getUsuarioCookie(), servicioId)
@@ -121,6 +124,7 @@ export default class ServiciosForm extends JetView {
                 $$("frmServicios").setValues(servicio);
                 this.loadTiposProfesional(servicio.tipoProfesionalId);
                 this.loadClientesAgente(servicio.clienteId);
+                this.show("./localesAfectados?servicioId=" + servicioId);
             })
             .catch((err) => {
                 messageApi.errorMessageAjax(err);
@@ -191,7 +195,7 @@ export default class ServiciosForm extends JetView {
                 $$("poblacion").setValue(rows.poblacion2);
                 $$("codPostal").setValue(rows.codPostal);
                 $$("provincia").setValue(rows.provincia);
-                 return;
+                return;
             });
     }
 }

@@ -3,6 +3,8 @@ import { usuarioService } from "../services/usuario_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
 import { serviciosService } from "../services/servicios_service";
+import { localesAfectadosService } from "../services/locales_afectados_service";
+import MyWindow from './widow';
 
 var editButton = "<span class='onEdit webix_icon wxi-pencil'></span>";
 var deleteButton = "<span class='onDelete webix_icon wxi-trash'></span>";
@@ -11,43 +13,45 @@ var currentRowDatatableView
 var isNewRow = false;
 
 
-export default class Servicios extends JetView {
+export default class LocalesAfectados extends JetView {
     config() {
         const translate = this.app.getService("locale")._;
-        var toolbarServicios = {
+        var toolbarLocalesAfectados = {
             view: "toolbar", padding: 3, elements: [
-                { view: "icon", icon: "mdi mdi-home-assistant", width: 37, align: "left" },
-                { view: "label", label: "Servicios" }
+                { view: "icon", icon: "mdi mdi-office-building", width: 37, align: "left" },
+                { view: "label", label: "Locales afectados" }
             ]
         }
-        var pagerServicios = {
+        var pagerLocalesAfectados = {
             cols: [
                 {
-                    view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value: "Solicitar un nuevo servicio", width: 300,
+                    view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value: "Agregar un local", width: 300,
                     click: () => {
-                        this.show('/top/serviciosForm?servicioId=0');
+                        //this.show('/top/serviciosForm?servicioId=0');
+                        this.win2.showWindow();
                     }
                 },
                 {},
                 {
-                    view: "pager", id: "mypager", css: { "text-align": "right" },
+                    view: "pager", id: "pagerLocalesAfectados", css: { "text-align": "right" },
                     template: "{common.first()} {common.prev()} {common.pages()} {common.next()} {common.last()}",
                     size: 25,
                     group: 5
                 }
             ]
         };
-        var datatableServicios = {
+        var datatableLocalesAfectados = {
             view: "datatable",
-            id: "serviciosGrid",
-            pager: "mypager",
+            id: "localesAfectadosGrid",
+            pager: "pagerLocalesAfectados",
             select: "row",
+            rightSplit: 1,
             columns: [
-                { id: "fechaSolicitud", adjust: true, header: ["Fecha solicitud", { content: "textFilter" }], sort: "date", format: webix.Date.dateToStr("%d/%m/%Y") },
-                { id: "tipoProfesional", fillspace: true, header: ["Tipo profesional", { content: "textFilter" }], sort: "string" },
-                { id: "descripcion", fillspace: true, header: ["Descripción del servicio solicitado", { content: "textFilter" }], sort: "string" },
-                { id: "direccion", fillspace: true, header: ["Dirección", { content: "textFilter" }], sort: "string" },
-                { id: "actions", header: [{ text: "Acciones", css: { "text-align": "center" } }], template: editButton , css: { "text-align": "center" } }
+                { id: "local", fillspace: true, header: ["Local", { content: "textFilter" }], sort: "string" },
+                { id: "personaContacto", fillspace: true, header: ["Persona contacto", { content: "textFilter" }], sort: "string" },
+                { id: "telefono1", fillspace: true, header: ["Telefono (1)", { content: "textFilter" }], sort: "string" },
+                { id: "correoElectronico", fillspace: true, header: ["Correo", { content: "textFilter" }], sort: "string" },
+                { id: "actions", header: [{ text: "Acciones", css: { "text-align": "center" } }], template: editButton, css: { "text-align": "center" } }
             ],
             onClick: {
                 "onEdit": function (event, id, node) {
@@ -81,7 +85,7 @@ export default class Servicios extends JetView {
                                 serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
                                     .then((result) => {
                                         this.$scope.load(result.servicioId);
-                                        $$('serviciosGrid').editStop();
+                                        $$('localesAfectadosGrid').editStop();
                                     })
                                     .catch((err) => {
                                         messageApi.errorMessageAjax(err);
@@ -101,9 +105,9 @@ export default class Servicios extends JetView {
         }
         var _view = {
             rows: [
-                toolbarServicios,
-                pagerServicios,
-                datatableServicios
+                toolbarLocalesAfectados,
+                pagerLocalesAfectados,
+                datatableLocalesAfectados
             ]
         }
         return _view;
@@ -115,20 +119,23 @@ export default class Servicios extends JetView {
             id = url[0].params.servicioId;
         }
         webix.UIManager.addHotKey("Esc", function () {
-            $$('serviciosGrid').remove(-1);
+            $$('localesAfectadosGrid').remove(-1);
             return false;
-        }, $$('serviciosGrid'));
-        this.load(id);
+        }, $$('localesAfectadosGrid'));
+        console.log("SERVICIO PASADO: ", id);
+        if (id != 0) this.load(id);
+        //WindowsView class
+        this.win2 = this.ui(MyWindow);
     }
     load(id) {
-        serviciosService.getServiciosComercial(usuarioService.getUsuarioCookie())
+        localesAfectadosService.getLocalesAfectadosServicio(usuarioService.getUsuarioCookie(), id)
             .then((data) => {
-                $$("serviciosGrid").clearAll();
-                $$("serviciosGrid").parse(generalApi.prepareDataForDataTable("servicioId", data));
-                if (id) {
-                    $$("serviciosGrid").select(id);
-                    $$("serviciosGrid").showItem(id);
-                }
+                $$("localesAfectadosGrid").clearAll();
+                $$("localesAfectadosGrid").parse(generalApi.prepareDataForDataTable("localAfectadoId", data));
+                // if (id) {
+                //     $$("localesAfectadosGrid").select(id);
+                //     $$("localesAfectadosGrid").showItem(id);
+                // }
             })
             .catch((err) => {
                 messageApi.errorMessageAjax(err);
