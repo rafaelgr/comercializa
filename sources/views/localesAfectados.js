@@ -28,7 +28,7 @@ export default class LocalesAfectados extends JetView {
                     view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value: "Agregar un local", width: 300,
                     click: () => {
                         //this.show('/top/serviciosForm?servicioId=0');
-                        this.win2.showWindow(5566);
+                        this.win2.showWindow(new Date());
                     }
                 },
                 {},
