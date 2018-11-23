@@ -69,15 +69,15 @@ export default class ServiciosForm extends JetView {
                             ]
                         },
                         {
-                            $subview: true
-                        },                        
-                        {
                             view: "textarea", id: "descripcion", name: "descripcion", required: true,
                             label: "Descripción de la avería", labelPosition: "top"
 
                         },
                         {
                             view: "checkbox", id: "autorizacion", name: "autorizacion", label: `Autorizo reparación menor de 400€ (1)`, required: true, labelWidth: 280
+                        },
+                        {
+                            $subview: true
                         },
                         {
                             borderless: true,
@@ -100,6 +100,7 @@ export default class ServiciosForm extends JetView {
         return _view;
     }
     init(view, url) {
+        console.log("init serviciosForm");
         usuarioService.checkLoggedUser();
         if (url[0].params.servicioId) {
             servicioId = url[0].params.servicioId;
@@ -110,12 +111,24 @@ export default class ServiciosForm extends JetView {
             this.loadClienteData(newv);
         });
     }
+    urlChange(view, url) {
+        if (url[1] && url[1].params.new) {
+            if (url[0].params.servicioId) {
+                servicioId = url[0].params.servicioId;
+            }
+            this.load(servicioId);
+            webix.delay(function () { $$("cmbTipoProfesional").focus(); });
+            this.$$("cmbClientes").attachEvent("onChange", (newv, oldv) => {
+                this.loadClienteData(newv);
+            });
+        }
+    }
     load(servicioId) {
         if (servicioId == 0) {
             this.loadTiposProfesional();
             this.loadClientesAgente();
             $$("fechaServicio").setValue(new Date());
-            this.show("./locales_afectados?servicioId=" + servicioId);
+            this.show("./localesAfectados?servicioId=" + servicioId);
             return;
         }
         serviciosService.getServicio(usuarioService.getUsuarioCookie(), servicioId)
@@ -133,7 +146,7 @@ export default class ServiciosForm extends JetView {
     cancel() {
         this.$scope.show('/top/servicios');
     }
-    accept() {
+    accept(newLine) {
         const translate = this.$scope.app.getService("locale")._;
         if (!$$("frmServicios").validate()) {
             messageApi.errorMessage("Debe rellenar los campos correctamente");

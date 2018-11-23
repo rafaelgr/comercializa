@@ -12,6 +12,7 @@ var currentIdDatatableView;
 var currentRowDatatableView
 var isNewRow = false;
 
+var vServicioId = 0;
 
 export default class LocalesAfectados extends JetView {
     config() {
@@ -27,7 +28,31 @@ export default class LocalesAfectados extends JetView {
                 {
                     view: "button", type: "form", icon: "wxi-plus", align: "left", hotkey: "Ctrl+F", value: "Agregar un local", width: 300,
                     click: () => {
-                        this.win2.showWindow(0);
+                        // console.log('Mandamos....');
+                        // this.show('/top/serviciosForm?servicioId=3/localesAfectados?servicioId=3&new=1');
+                        // this.win2.showWindow(0);
+                        // Controlar si no se ha dado de alta todavía el servicio
+                        if (vServicioId == 0) {
+                            // Hay que dar de alta el servicio
+                            if (!$$("frmServicios").validate()) {
+                                messageApi.errorMessage("Debe rellenar los campos correctamente");
+                                return;
+                            }
+                            var data = $$("frmServicios").getValues();
+                            data.servicioId = 0;
+                            data.agenteId = usuarioService.getUsuarioCookie().comercialId;
+                            console.log("Antes del alta: ", data);
+                            serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
+                                .then((result) => {
+                                    this.show('/top/serviciosForm?servicioId=' + result.servicioId + '/localesAfectados?servicioId' + result.servicioId + '&new=1');
+                                    this.win2.showWindow(0);
+                                })
+                                .catch((err) => {
+                                    messageApi.errorMessageAjax(err);
+                                });
+                        } else {
+                            this.win2.showWindow(0);
+                        }
                     }
                 },
                 {},
@@ -77,20 +102,23 @@ export default class LocalesAfectados extends JetView {
             $$('localesAfectadosGrid').remove(-1);
             return false;
         }, $$('localesAfectadosGrid'));
-        console.log("SERVICIO PASADO: ", id);
+        vServicioId = id;
         if (id != 0) this.load(id);
         //WindowsView class
         this.win2 = this.ui(LocalesAfectadosForm);
     }
+    urlChange(view, url){
+        if (url[0].params.servicioId) {
+            vServicioId = url[0].params.servicioId;
+        }
+    }
     load(id) {
+        console.log("Servicio pasado :", id);
+        if (id == 0) return;
         localesAfectadosService.getLocalesAfectadosServicio(usuarioService.getUsuarioCookie(), id)
             .then((data) => {
                 $$("localesAfectadosGrid").clearAll();
-                $$("localesAfectadosGrid").parse(generalApi.prepareDataForDataTable("localAfectadoId", data));
-                // if (id) {
-                //     $$("localesAfectadosGrid").select(id);
-                //     $$("localesAfectadosGrid").showItem(id);
-                // }
+                if (data) $$("localesAfectadosGrid").parse(generalApi.prepareDataForDataTable("localAfectadoId", data));
             })
             .catch((err) => {
                 messageApi.errorMessageAjax(err);
@@ -98,8 +126,5 @@ export default class LocalesAfectados extends JetView {
     }
     edit(id) {
         this.win2.showWindow(id);
-    }
-    returnForm() {
-        console.log("Return from form");
     }
 }
