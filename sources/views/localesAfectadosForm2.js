@@ -1,16 +1,21 @@
 import { JetView } from "webix-jet";
 import { usuarioService } from "../services/usuario_service";
+import { tiposProfesionalService } from "../services/tiposProfesional_service";
+import { serviciosService } from "../services/servicios_service";
+import { clientesService } from "../services/clientes_service";
 import { messageApi } from "../utilities/messages";
 import { generalApi } from "../utilities/general";
-import { localesAfectadosService } from "../services/locales_afectados_service";
-
-let localAfectadoId = 0;
+import {WindowsView} from './localesAfectadosForm';
 
 var diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
 ]
+
+var servicioId = 0;
+
 export default class LocalesAfectadosForm extends JetView {
     config() {
+        const translate = this.app.getService("locale")._;
         const _view1 = {
             view: "layout",
             id: "localesAfectadosForm",
@@ -120,57 +125,115 @@ export default class LocalesAfectadosForm extends JetView {
                     ]
                 }
             ]
-        };
-        var _view = {
-            view: "window",
-            id: "w2",
-            position: "center", move: true, resize: true,
-            width: 800,
-            head: {
-                view: "toolbar", cols: [
-                    {},
-                    {
-                        view: "icon", icon: "mdi mdi-close", click: () => {
-                            $$('w2').hide();
-                        }
-                    }
-                ]
-            }, modal: true,
+        }
+        const _view = {
+            view: "window", position: "center", head: "Window",
             body: _view1
-        };
-        return _view
+        }
+        return _view;
     }
-    showWindow(id) {
+    showWindow() {
         this.getRoot().show();
-        localAfectadoId = id;
-        if (localAfectadoId != 0) {
-            localesAfectadosService.getLocalAfectado(usuarioService.getUsuarioCookie(), localAfectadoId)
-                .then((localAfectado) => {
-                    $$("frmLocalesAfectados").setValues(localAfectado);
-                })
-                .catch((err) => {
-                    messageApi.errorMessageAjax(err);
-                });
-        }
-
     }
-    cancel(){
-        var mItem = $$('localesAfectadosGrid').getItem(localAfectadoId);
-        console.log("MITEM: ", mItem);
-        if (mItem) {
-            mItem.local = "TE TEOQUÉ";
-        }
-        console.log("MITEM2: ", mItem);
-        $$('localesAfectadosGrid').refresh();
-        $$('w2').hide();
+    init(view, url) {
+        // usuarioService.checkLoggedUser();
+        // if (url[0].params.servicioId) {
+        //     servicioId = url[0].params.servicioId;
+        // }
+        // this.load(servicioId);
+        // webix.delay(function () { $$("cmbTipoProfesional").focus(); });
+        // this.$$("cmbClientes").attachEvent("onChange", (newv, oldv) => {
+        //     this.loadClienteData(newv);
+        // });
+        //WindowsView class
     }
-    accept(){
-        var data = $$("frmLocalesAfectados").getValues();
-        console.log('DATA LOCAL: ', data);
-        if (localAfectadoId == 0){
-
-        } else {
-
-        }
+    load(servicioId) {
+        // if (servicioId == 0) {
+        //     this.loadTiposProfesional();
+        //     this.loadClientesAgente();
+        //     $$("fechaServicio").setValue(new Date());
+        //     this.show("./locales_afectados?servicioId=" + servicioId);
+        //     return;
+        // }
+        // serviciosService.getServicio(usuarioService.getUsuarioCookie(), servicioId)
+        //     .then((servicio) => {
+        //         servicio.fechaCreacion = new Date(servicio.fechaCreacion);
+        //         $$("frmLocalesAfectados").setValues(servicio);
+        //         this.loadTiposProfesional(servicio.tipoProfesionalId);
+        //         this.loadClientesAgente(servicio.clienteId);
+        //         this.show("./localesAfectados?servicioId=" + servicioId);
+        //     })
+        //     .catch((err) => {
+        //         messageApi.errorMessageAjax(err);
+        //     });
     }
+    cancel() {
+        // this.$scope.show('/top/servicios');
+    }
+    accept() {
+        // const translate = this.$scope.app.getService("locale")._;
+        // if (!$$("frmLocalesAfectados").validate()) {
+        //     messageApi.errorMessage("Debe rellenar los campos correctamente");
+        //     return;
+        // }
+        // var data = $$("frmLocalesAfectados").getValues();
+        // if (servicioId == 0) {
+        //     data.servicioId = 0;
+        //     data.agenteId = usuarioService.getUsuarioCookie().comercialId;
+        //     serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
+        //         .then((result) => {
+        //             this.$scope.show('/top/servicios?servicioId=' + result.servicioId);
+        //         })
+        //         .catch((err) => {
+        //             messageApi.errorMessageAjax(err);
+        //         });
+        // } else {
+        //     serviciosService.putServicio(usuarioService.getUsuarioCookie(), data)
+        //         .then(() => {
+        //             this.$scope.show('/top/servicios?servicioId=' + data.servicioId);
+        //         })
+        //         .catch((err) => {
+        //             messageApi.errorMessageAjax(err);
+        //         });
+        // }
+    }
+    loadTiposProfesional(tipoProfesionalId) {
+        // tiposProfesionalService.getTiposProfesional(usuarioService.getUsuarioCookie())
+        //     .then(rows => {
+        //         var servicios = generalApi.prepareDataForCombo('tipoProfesionalId', 'nombre', rows);
+        //         var list = $$("cmbTipoProfesional").getPopup().getList();
+        //         list.clearAll();
+        //         list.parse(servicios);
+        //         if (tipoProfesionalId) {
+        //             $$("cmbTipoProfesional").setValue(tipoProfesionalId);
+        //             $$("cmbTipoProfesional").refresh();
+        //         }
+        //         return;
+        //     });
+    }
+    loadClientesAgente(clienteId) {
+        // clientesService.getClientesAgente(usuarioService.getUsuarioCookie(), usuarioService.getUsuarioCookie().comercialId)
+        //     .then(rows => {
+        //         var servicios = generalApi.prepareDataForCombo('clienteId', 'nombre', rows);
+        //         var list = $$("cmbClientes").getPopup().getList();
+        //         list.clearAll();
+        //         list.parse(servicios);
+        //         if (clienteId) {
+        //             $$("cmbClientes").setValue(clienteId);
+        //             $$("cmbClientes").refresh();
+        //         }
+        //         return;
+        //     });
+    }
+    loadClienteData(clienteId) {
+        // clientesService.getCliente(usuarioService.getUsuarioCookie(), clienteId)
+        //     .then(rows => {
+        //         $$("calle").setValue(rows.direccion);
+        //         $$("poblacion").setValue(rows.poblacion2);
+        //         $$("codPostal").setValue(rows.codPostal);
+        //         $$("provincia").setValue(rows.provincia);
+        //         return;
+        //     });
+    }
+
 }

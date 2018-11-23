@@ -53,9 +53,9 @@ export const localesAfectadosService = {
         }
         return result;
     },
-    getLocalAfectado: (usu, servicioId) => {
+    getLocalAfectado: (usu, localAfectadoId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectadoId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -94,7 +94,7 @@ export const localesAfectadosService = {
     putLocalAfectado: (usu, servicio) => {
         servicio = serviciosService.cleanLocalAfectado(servicio);
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + servicio.servicioId;
+            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + servicio.localAfectadoId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
@@ -110,9 +110,9 @@ export const localesAfectadosService = {
                 });
         });
     },
-    deleteLocalAfectado: (usu, servicioId) => {
+    deleteLocalAfectado: (usu, localAfectadoId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + servicioId;
+            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectadoId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
