@@ -2,14 +2,17 @@ import { devConfig } from "../config/config";
 export const localesAfectadosService = {
     getLocalesAfectados: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -20,14 +23,18 @@ export const localesAfectadosService = {
     },
     getLocalesAfectadosServicio: (usu, servicioId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/servicio/" + servicioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados/servicio/" + servicioId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
+
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -35,34 +42,21 @@ export const localesAfectadosService = {
                     fail(inXhr);
                 });
         });
-    },    
-    getSyncLocalesAfectados: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/locales_afectados";
-        var res = webix.ajax()
-            .headers({
-                "Content-Type": "application/json",
-                "x-apiKey": usu.apiKey
-            })
-            .sync()
-            .get(url);
-        var result = { data: null, err: null };
-        if (res.status != 200) {
-            result.err = res;
-        } else {
-            result.data = JSON.parse(res.response);
-        }
-        return result;
     },
     getLocalAfectado: (usu, localAfectadoId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectadoId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados/" + localAfectadoId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
+
                 })
-                .get(url)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -74,14 +68,18 @@ export const localesAfectadosService = {
     },
     postLocalAfectado: (usu, localAfectado) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .post(url, { localAfectado: localAfectado })
+
                 })
-                .post(url, {localAfectado: localAfectado})
                 .then(function (result) {
                     success(result.json());
                 })
@@ -94,14 +92,18 @@ export const localesAfectadosService = {
     putLocalAfectado: (usu, localAfectado) => {
         localAfectado = localesAfectadosService.cleanLocalAfectado(localAfectado);
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectado.localAfectadoId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados/" + localAfectado.localAfectadoId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .put(url, { localAfectado: localAfectado });
+
                 })
-                .put(url, {localAfectado: localAfectado})
                 .then(function (result) {
                     success(result.json());
                 })
@@ -112,14 +114,18 @@ export const localesAfectadosService = {
     },
     deleteLocalAfectado: (usu, localAfectadoId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectadoId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/locales_afectados/" + localAfectadoId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .del(url);
+
                 })
-                .del(url)
                 .then(function (result) {
                     success(result.json());
                 })

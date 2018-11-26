@@ -2,14 +2,17 @@ import { devConfig } from "../config/config";
 export const clientesService = {
     getClientes: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/clientes";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -20,14 +23,18 @@ export const clientesService = {
     },
     getClientesAgente: (usu, agenteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes/agente/" + agenteId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/clientes/agente/" + agenteId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
+
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -36,33 +43,20 @@ export const clientesService = {
                 });
         });
     },
-    getSyncClientes: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/clientes";
-        var res = webix.ajax()
-            .headers({
-                "Content-Type": "application/json",
-                "x-apiKey": usu.apiKey
-            })
-            .sync()
-            .get(url);
-        var result = { data: null, err: null };
-        if (res.status != 200) {
-            result.err = res;
-        } else {
-            result.data = JSON.parse(res.response);
-        }
-        return result;
-    },
     getCliente: (usu, clienteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes/" + clienteId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig().
+                then(conf => {
+                    var url = conf.urlApi + "/api/clientes/" + clienteId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url)
+
                 })
-                .get(url)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -74,14 +68,18 @@ export const clientesService = {
     },
     postCliente: (usu, cliente) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/clientes";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .post(url, cliente)
+
                 })
-                .post(url, cliente)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -93,12 +91,16 @@ export const clientesService = {
     },
     putCliente: (usu, cliente) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/clientes";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+
                 })
                 .put(url, cliente)
                 .then(function (result) {
@@ -111,14 +113,18 @@ export const clientesService = {
     },
     deleteCliente: (usu, clienteId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/clientes/" + clienteId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig().getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/clientes/" + clienteId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .del(url)
+
                 })
-                .del(url)
                 .then(function (result) {
                     success(result.json());
                 })

@@ -2,14 +2,18 @@ import { devConfig } from "../config/config";
 export const serviciosService = {
     getServicios: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url);
+
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -20,14 +24,17 @@ export const serviciosService = {
     },
     getServiciosComercial: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/agente/" + usu.comercialId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios/agente/" + usu.comercialId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url);
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -35,53 +42,42 @@ export const serviciosService = {
                     fail(inXhr);
                 });
         });
-    },    
-    getSyncServicios: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/servicios";
-        var res = webix.ajax()
-            .headers({
-                "Content-Type": "application/json",
-                "x-apiKey": usu.apiKey
-            })
-            .sync()
-            .get(url);
-        var result = { data: null, err: null };
-        if (res.status != 200) {
-            result.err = res;
-        } else {
-            result.data = JSON.parse(res.response);
-        }
-        return result;
     },
     getServicio: (usu, servicioId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios/" + servicioId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url);
                 })
-                .get(url)
                 .then(function (result) {
                     success(result.json());
                 })
                 .catch(function (inXhr) {
                     fail(inXhr);
                 });
-        })
-
+        });
     },
     postServicio: (usu, servicio) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .post(url, { servicio: servicio })
+
                 })
-                .post(url, {servicio: servicio})
                 .then(function (result) {
                     success(result.json());
                 })
@@ -94,14 +90,17 @@ export const serviciosService = {
     putServicio: (usu, servicio) => {
         servicio = serviciosService.cleanServicio(servicio);
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicio.servicioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios/" + servicio.servicioId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .put(url, { servicio: servicio });
                 })
-                .put(url, {servicio: servicio})
                 .then(function (result) {
                     success(result.json());
                 })
@@ -112,14 +111,18 @@ export const serviciosService = {
     },
     deleteServicio: (usu, servicioId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/servicios/" + servicioId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/servicios/" + servicioId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .del(url);
+
                 })
-                .del(url)
                 .then(function (result) {
                     success(result.json());
                 })

@@ -2,14 +2,17 @@ import { devConfig } from "../config/config";
 export const tiposProfesionalService = {
     getTiposProfesional: (usu) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/tipos_profesional";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url);
                 })
-                .get(url)
                 .then((result) => {
                     success(result.json());
                 })
@@ -18,33 +21,19 @@ export const tiposProfesionalService = {
                 });
         });
     },
-    getSyncTiposProfesional: (usu) => {
-        var url = devConfig.getApiUrl() + "/api/tipos_profesional";
-        var res = webix.ajax()
-            .headers({
-                "Content-Type": "application/json",
-                "x-apiKey": usu.apiKey
-            })
-            .sync()
-            .get(url);
-        var result = { data: null, err: null };
-        if (res.status != 200) {
-            result.err = res;
-        } else {
-            result.data = JSON.parse(res.response);
-        }
-        return result;
-    },
     getTipoProfesional: (usu, tipoProfesionalId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/tipos_profesional/" + tipoProfesionalId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/tipos_profesional/" + tipoProfesionalId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .get(url);
                 })
-                .get(url)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -56,14 +45,17 @@ export const tiposProfesionalService = {
     },
     postTipoProfesional: (usu, grupoUsuario) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/tipos_profesional";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .post(url, grupoUsuario);
                 })
-                .post(url, grupoUsuario)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -75,14 +67,17 @@ export const tiposProfesionalService = {
     },
     putTipoProfesional: (usu, grupoUsuario) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/tipos_profesional";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/tipos_profesional";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .put(url, grupoUsuario);
                 })
-                .put(url, grupoUsuario)
                 .then(function (result) {
                     success(result.json());
                 })
@@ -93,14 +88,17 @@ export const tiposProfesionalService = {
     },
     deleteTipoProfesional: (usu, tipoProfesionalId) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/tipos_profesional/" + tipoProfesionalId;
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json",
-                    "x-apiKey": usu.apiKey
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/tipos_profesional/" + tipoProfesionalId;
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json",
+                            "x-apiKey": usu.apiKey
+                        })
+                        .del(url);
                 })
-                .del(url)
                 .then(function (result) {
                     success(result.json());
                 })

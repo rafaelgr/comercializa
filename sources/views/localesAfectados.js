@@ -54,7 +54,7 @@ export default class LocalesAfectados extends JetView {
                 {
                     view: "pager", id: "pagerLocalesAfectados", css: { "text-align": "right" },
                     template: "{common.first()} {common.prev()} {common.pages()} {common.next()} {common.last()}",
-                    size: 25,
+                    size: 5,
                     group: 5
                 }
             ]
@@ -79,6 +79,7 @@ export default class LocalesAfectados extends JetView {
             }
         }
         var _view = {
+            minHeight: 300,
             rows: [
                 toolbarLocalesAfectados,
                 pagerLocalesAfectados,

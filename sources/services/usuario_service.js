@@ -29,13 +29,16 @@ export const usuarioService = {
     // getLoginEmail
     getLogin: (login, password) => {
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/comerciales/login";
-            webix.ajax()
-                .timeout(10000)
-                .headers({
-                    "Content-Type": "application/json"
+            devConfig.getConfig()
+                .then(conf => {
+                    var url = conf.urlApi + "/api/comerciales/login";
+                    return webix.ajax()
+                        .timeout(10000)
+                        .headers({
+                            "Content-Type": "application/json"
+                        })
+                        .post(url, { login: login, password: password })
                 })
-                .post(url, { login: login, password: password })
                 .then(function (result) {
                     success(result.json());
                 })

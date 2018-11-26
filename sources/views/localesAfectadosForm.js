@@ -153,6 +153,8 @@ export default class LocalesAfectadosForm extends JetView {
                 .catch((err) => {
                     messageApi.errorMessageAjax(err);
                 });
+        } else {
+            $$("frmLocalesAfectados").setValues({});
         }
     }
     cancel() {
@@ -169,7 +171,7 @@ export default class LocalesAfectadosForm extends JetView {
             data.servicioId = mServicioId;
             localesAfectadosService.postLocalAfectado(usuarioService.getUsuarioCookie(), data)
                 .then((result) => {
-                    this.$scope.refreshServicioFormGrid(mServicioId);
+                    this.$scope.refreshServicioFormGrid(mServicioId, result.localAfectadoId);
                 })
                 .catch((err) => {
                     messageApi.errorMessageAjax(err);
@@ -177,18 +179,22 @@ export default class LocalesAfectadosForm extends JetView {
         } else {
             localesAfectadosService.putLocalAfectado(usuarioService.getUsuarioCookie(), data)
                 .then((result) => {
-                    this.$scope.refreshServicioFormGrid(mServicioId);
+                    this.$scope.refreshServicioFormGrid(mServicioId, result.localAfectadoId);
                 })
                 .catch((err) => {
                     messageApi.errorMessageAjax(err);
                 });
         }
     }
-    refreshServicioFormGrid(servicioId) {
+    refreshServicioFormGrid(servicioId, localAfectadoId) {
         localesAfectadosService.getLocalesAfectadosServicio(usuarioService.getUsuarioCookie(), servicioId)
             .then((data) => {
                 $$("localesAfectadosGrid").clearAll();
                 if (data) $$("localesAfectadosGrid").parse(generalApi.prepareDataForDataTable("localAfectadoId", data));
+                if (localAfectadoId) {
+                    $$("localesAfectadosGrid").select(localAfectadoId);
+                    $$("localesAfectadosGrid").showItem(localAfectadoId);
+                }
                 $$('w2').hide();
             })
             .catch((err) => {
