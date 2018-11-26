@@ -72,7 +72,7 @@ export const localesAfectadosService = {
         })
 
     },
-    postLocalAfectado: (usu, servicio) => {
+    postLocalAfectado: (usu, localAfectado) => {
         return new webix.promise((success, fail) => {
             var url = devConfig.getApiUrl() + "/api/locales_afectados";
             webix.ajax()
@@ -81,7 +81,7 @@ export const localesAfectadosService = {
                     "Content-Type": "application/json",
                     "x-apiKey": usu.apiKey
                 })
-                .post(url, {servicio: servicio})
+                .post(url, {localAfectado: localAfectado})
                 .then(function (result) {
                     success(result.json());
                 })
@@ -91,17 +91,17 @@ export const localesAfectadosService = {
 
         });
     },
-    putLocalAfectado: (usu, servicio) => {
-        servicio = serviciosService.cleanLocalAfectado(servicio);
+    putLocalAfectado: (usu, localAfectado) => {
+        localAfectado = localesAfectadosService.cleanLocalAfectado(localAfectado);
         return new webix.promise((success, fail) => {
-            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + servicio.localAfectadoId;
+            var url = devConfig.getApiUrl() + "/api/locales_afectados/" + localAfectado.localAfectadoId;
             webix.ajax()
                 .timeout(10000)
                 .headers({
                     "Content-Type": "application/json",
                     "x-apiKey": usu.apiKey
                 })
-                .put(url, {servicio: servicio})
+                .put(url, {localAfectado: localAfectado})
                 .then(function (result) {
                     success(result.json());
                 })

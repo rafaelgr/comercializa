@@ -5,6 +5,7 @@ import { generalApi } from "../utilities/general";
 import { localesAfectadosService } from "../services/locales_afectados_service";
 
 let localAfectadoId = 0;
+let mServicioId = 0;
 
 var diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
@@ -65,7 +66,7 @@ export default class LocalesAfectadosForm extends JetView {
                                             label: "Teléfono (2)", labelPosition: "top"
                                         },
                                         {
-                                            view: "text", id: "correoElectronico", name: "telefono2",
+                                            view: "text", id: "correoElectronico", name: "correoElectronico",
                                             label: "Correo electrónico", labelPosition: "top"
                                         }
                                     ]
@@ -73,7 +74,7 @@ export default class LocalesAfectadosForm extends JetView {
                                 {
                                     cols: [
                                         {
-                                            view: "text", id: "deHoraAtencion", name: "deHoraAtencion", required: true,
+                                            view: "text", id: "deHoraAtencion", name: "deHoraAtencion", 
                                             label: "Mañanas desde", labelPosition: "top"
                                         },
                                         {
@@ -81,7 +82,7 @@ export default class LocalesAfectadosForm extends JetView {
                                             label: "hasta", labelPosition: "top"
                                         },
                                         {
-                                            view: "text", id: "deHoraAtencion2", name: "deHoraAtencion2", required: true,
+                                            view: "text", id: "deHoraAtencion2", name: "deHoraAtencion2", 
                                             label: "Tardes desde", labelPosition: "top"
                                         },
                                         {
@@ -89,11 +90,11 @@ export default class LocalesAfectadosForm extends JetView {
                                             label: "hasta", labelPosition: "top"
                                         },
                                         {
-                                            view: "combo", id: "deDiaSemana", name: "deDiaSemana", required: true, options: diasSemana,
+                                            view: "combo", id: "deDiaSemana", name: "deDiaSemana",  options: diasSemana,
                                             label: "De", labelPosition: "top"
                                         },
                                         {
-                                            view: "combo", id: "aDiaSemana", name: "aDiaSemana", required: true, options: diasSemana,
+                                            view: "combo", id: "aDiaSemana", name: "aDiaSemana",  options: diasSemana,
                                             label: "A", labelPosition: "top"
                                         }
                                     ]
@@ -104,7 +105,7 @@ export default class LocalesAfectadosForm extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "textarea", id: "comentarios", name: "comentarios", required: true,
+                                    view: "textarea", id: "comentarios", name: "comentarios", 
                                     label: "Comentarios", labelPosition: "top"
                                 }
                             ]
@@ -140,9 +141,10 @@ export default class LocalesAfectadosForm extends JetView {
         };
         return _view
     }
-    showWindow(id) {
+    showWindow(servicioId, id) {
         this.getRoot().show();
         localAfectadoId = id;
+        mServicioId = servicioId;
         if (localAfectadoId != 0) {
             localesAfectadosService.getLocalAfectado(usuarioService.getUsuarioCookie(), localAfectadoId)
                 .then((localAfectado) => {
@@ -152,25 +154,45 @@ export default class LocalesAfectadosForm extends JetView {
                     messageApi.errorMessageAjax(err);
                 });
         }
-
     }
-    cancel(){
-        var mItem = $$('localesAfectadosGrid').getItem(localAfectadoId);
-        console.log("MITEM: ", mItem);
-        if (mItem) {
-            mItem.local = "TE TEOQUÉ";
-        }
-        console.log("MITEM2: ", mItem);
-        $$('localesAfectadosGrid').refresh();
+    cancel() {
         $$('w2').hide();
     }
-    accept(){
-        var data = $$("frmLocalesAfectados").getValues();
-        console.log('DATA LOCAL: ', data);
-        if (localAfectadoId == 0){
-
-        } else {
-
+    accept() {
+        if (!$$("frmLocalesAfectados").validate()) {
+            messageApi.errorMessage("Debe rellenar los campos correctamente");
+            return;
         }
+        var data = $$("frmLocalesAfectados").getValues();
+        if (localAfectadoId == 0) {
+            data.localAfectadoId = 0;
+            data.servicioId = mServicioId;
+            localesAfectadosService.postLocalAfectado(usuarioService.getUsuarioCookie(), data)
+                .then((result) => {
+                    this.$scope.refreshServicioFormGrid(mServicioId);
+                })
+                .catch((err) => {
+                    messageApi.errorMessageAjax(err);
+                });
+        } else {
+            localesAfectadosService.putLocalAfectado(usuarioService.getUsuarioCookie(), data)
+                .then((result) => {
+                    this.$scope.refreshServicioFormGrid(mServicioId);
+                })
+                .catch((err) => {
+                    messageApi.errorMessageAjax(err);
+                });
+        }
+    }
+    refreshServicioFormGrid(servicioId) {
+        localesAfectadosService.getLocalesAfectadosServicio(usuarioService.getUsuarioCookie(), servicioId)
+            .then((data) => {
+                $$("localesAfectadosGrid").clearAll();
+                if (data) $$("localesAfectadosGrid").parse(generalApi.prepareDataForDataTable("localAfectadoId", data));
+                $$('w2').hide();
+            })
+            .catch((err) => {
+                messageApi.errorMessageAjax(err);
+            });
     }
 }

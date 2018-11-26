@@ -100,7 +100,6 @@ export default class ServiciosForm extends JetView {
         return _view;
     }
     init(view, url) {
-        console.log("init serviciosForm");
         usuarioService.checkLoggedUser();
         if (url[0].params.servicioId) {
             servicioId = url[0].params.servicioId;
@@ -146,7 +145,7 @@ export default class ServiciosForm extends JetView {
     cancel() {
         this.$scope.show('/top/servicios');
     }
-    accept(newLine) {
+    accept() {
         const translate = this.$scope.app.getService("locale")._;
         if (!$$("frmServicios").validate()) {
             messageApi.errorMessage("Debe rellenar los campos correctamente");
@@ -202,6 +201,7 @@ export default class ServiciosForm extends JetView {
             });
     }
     loadClienteData(clienteId) {
+        if (servicioId != 0) return;
         clientesService.getCliente(usuarioService.getUsuarioCookie(), clienteId)
             .then(rows => {
                 $$("calle").setValue(rows.direccion);
