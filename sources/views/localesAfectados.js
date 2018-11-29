@@ -5,6 +5,7 @@ import { generalApi } from "../utilities/general";
 import { serviciosService } from "../services/servicios_service";
 import { localesAfectadosService } from "../services/locales_afectados_service";
 import LocalesAfectadosForm from './localesAfectadosForm';
+import { webPushApi } from '../utilities/webpush';
 
 var editButton = "<span class='onEdit webix_icon wxi-pencil'></span>";
 var deleteButton = "<span class='onDelete webix_icon wxi-trash'></span>";
@@ -40,7 +41,11 @@ export default class LocalesAfectados extends JetView {
                             serviciosService.postServicio(usuarioService.getUsuarioCookie(), data)
                                 .then((result) => {
                                     this.show('/top/serviciosForm?servicioId=' + result.servicioId + '/localesAfectados?servicioId' + result.servicioId + '&new=1');
-                                    this.win2.showWindow(vServicioId, 0);
+                                    this.win2.showWindow(result.servicioId, 0);
+                                    return webPushApi.pushServicio(result.servicioId);
+                                })
+                                .then(result => {
+                                    console.log("Notificación enviada: ", result);
                                 })
                                 .catch((err) => {
                                     messageApi.errorMessageAjax(err);
@@ -103,7 +108,7 @@ export default class LocalesAfectados extends JetView {
         //WindowsView class
         this.win2 = this.ui(LocalesAfectadosForm);
     }
-    urlChange(view, url){
+    urlChange(view, url) {
         if (url[0].params.servicioId) {
             vServicioId = url[0].params.servicioId;
         }

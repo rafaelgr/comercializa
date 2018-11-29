@@ -204,10 +204,10 @@ export default class ServiciosForm extends JetView {
         if (servicioId != 0) return;
         clientesService.getCliente(usuarioService.getUsuarioCookie(), clienteId)
             .then(rows => {
-                $$("calle").setValue(rows.direccion);
+                $$("calle").setValue(rows.direccion2);
                 $$("poblacion").setValue(rows.poblacion2);
-                $$("codPostal").setValue(rows.codPostal);
-                $$("provincia").setValue(rows.provincia);
+                $$("codPostal").setValue(rows.codPostal2);
+                $$("provincia").setValue(rows.provincia2);
                 return;
             });
     }

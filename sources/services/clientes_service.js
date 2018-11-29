@@ -86,7 +86,6 @@ export const clientesService = {
                 .catch(function (inXhr) {
                     fail(inXhr);
                 });
-
         });
     },
     putCliente: (usu, cliente) => {

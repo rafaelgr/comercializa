@@ -1,6 +1,7 @@
 import { JetView } from "webix-jet";
 import { usuarioService } from "../services/usuario_service";
 import { messageApi } from "../utilities/messages";
+import { devConfig } from "../config/config"
 export default class Login extends JetView {
     config() {
         var _view = {
@@ -24,6 +25,10 @@ export default class Login extends JetView {
                                         {
                                             view: "label", height: 100, align: "center",
                                             label: "<img src='assets/img/logo.png'/>"
+                                        },
+                                        {
+                                            view: "label", align: "center", id: "version",
+                                            label: "VRS"
                                         },
                                         {
                                             view: "text", name: "login", required: true,
@@ -56,6 +61,15 @@ export default class Login extends JetView {
         return _view;
     }
     init() {
+        // Obtener la versión
+        devConfig.getVersion()
+            .then(vrs => {
+                $$("version").data.label = "VRS " + vrs.version;
+                $$("version").refresh();
+            })
+            .catch(err => {
+                messageApi.errorMessageAjax(err);
+            });
 
     }
     cancel() {
