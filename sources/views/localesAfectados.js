@@ -6,6 +6,7 @@ import { serviciosService } from "../services/servicios_service";
 import { localesAfectadosService } from "../services/locales_afectados_service";
 import LocalesAfectadosForm from './localesAfectadosForm';
 import { webPushApi } from '../utilities/webpush';
+import { maiJetService } from '../services/mailjet_service';
 
 var editButton = "<span class='onEdit webix_icon wxi-pencil'></span>";
 var deleteButton = "<span class='onDelete webix_icon wxi-trash'></span>";
@@ -42,7 +43,19 @@ export default class LocalesAfectados extends JetView {
                                 .then((result) => {
                                     this.show('/top/serviciosForm?servicioId=' + result.servicioId + '/localesAfectados?servicioId' + result.servicioId + '&new=1');
                                     this.win2.showWindow(result.servicioId, 0);
+                                    vServicioId = result.servicioId;
                                     return webPushApi.pushServicio(result.servicioId);
+                                })
+                                .then(result => {
+                                    var user = usuarioService.getUsuarioCookie();
+                                    var email = {
+                                        "FromEmail": "rafa@myariadna.com",
+                                        "FromName": "Plataforma Agentes",
+                                        "Subject": "[Notificando servicio nuevo]",
+                                        "Text-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. Número: " + vServicioId,
+                                        "Html-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. <strong>Número: " + vServicioId + "</strong>"
+                                    };
+                                    return maiJetService.postMail(email);
                                 })
                                 .then(result => {
                                     console.log("Notificación enviada: ", result);
