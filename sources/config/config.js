@@ -13,6 +13,7 @@ export const devConfig = {
             if (!PRODUCTION) {
                 return success({
                     urlApi: "http://localhost:5000",
+                    urlClient: "http://localhost:8089",
                     one_push_url: "https://onesignal.com/api/v1/notifications",
                     one_app_id: "ff4726ef-84ad-448d-ac78-b4beecf02f0b",
                     one_api_key: "Yzk2ZWY5NTctOWQ2Yi00ZTc5LTk5NzItOTI1NTVlYzdlZGU5"

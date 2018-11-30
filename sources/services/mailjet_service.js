@@ -4,7 +4,7 @@ export const maiJetService = {
         return new webix.promise((success, fail) => {
             devConfig.getConfig()
                 .then(conf => {
-                    var url = "http://localhost:8089" + "/mailjet";
+                    var url = conf.urlClient + "/mailjet";
                     return webix.ajax()
                         .timeout(10000)
                         .headers({
