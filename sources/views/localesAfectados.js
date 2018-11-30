@@ -7,6 +7,7 @@ import { localesAfectadosService } from "../services/locales_afectados_service";
 import LocalesAfectadosForm from './localesAfectadosForm';
 import { webPushApi } from '../utilities/webpush';
 import { maiJetService } from '../services/mailjet_service';
+import { devConfig } from "../config/config";
 
 var editButton = "<span class='onEdit webix_icon wxi-pencil'></span>";
 var deleteButton = "<span class='onDelete webix_icon wxi-trash'></span>";
@@ -47,13 +48,17 @@ export default class LocalesAfectados extends JetView {
                                     return webPushApi.pushServicio(result.servicioId);
                                 })
                                 .then(result => {
+                                    return devConfig.getConfig();
+                                })
+                                .then(conf => {
                                     var user = usuarioService.getUsuarioCookie();
+                                    var url = conf.urlApi + "/ServicioDetalle.html?ServicioId=" + vServicioId;
                                     var email = {
                                         "FromEmail": "rafa@myariadna.com",
                                         "FromName": "Plataforma Agentes",
-                                        "Subject": "[Notificando servicio nuevo]",
-                                        "Text-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. Número: " + vServicioId,
-                                        "Html-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. <strong>Número: " + vServicioId + "</strong>"
+                                        "Subject": "[PLATAFORMA AGENTES] Solicitud de servicio",
+                                        "Text-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. Número: " + vServicioId + " Puede consultar el servicio en: " + url,
+                                        "Html-part": "El usuario " + user.nombre + " ha dado de alta un nuevo servicio. <strong>Número: " + vServicioId + "</strong>" + "<p> Puede consultar el servicio en: " + url + "</p>"
                                     };
                                     return maiJetService.postMail(email);
                                 })
